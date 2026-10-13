@@ -2,14 +2,24 @@
 
 > **Make avoiding work accidentally productive with AI.**
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Cloud_Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://procrasti-win-796910223127.us-central1.run.app)
+[![Live Web App (Permanent)](https://img.shields.io/badge/Live_App-GitHub_Pages-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://madhu-sunkari2.github.io/procrasti-win/)
+[![Google Cloud Run](https://img.shields.io/badge/Mirror-Cloud_Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://procrasti-win-796910223127.us-central1.run.app)
 [![Built with Gemini](https://img.shields.io/badge/AI-Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero_Vanilla_JS-success?style=for-the-badge)](https://developer.mozilla.org/)
 
 ---
 
-## 🚀 Live Application
-👉 **[Open Procrasti-WIN Live](https://procrasti-win-796910223127.us-central1.run.app)**
+## 🌐 Permanent Live Access (24/7)
+
+👉 **Launch Procrasti-WIN**: **[https://madhu-sunkari2.github.io/procrasti-win/](https://madhu-sunkari2.github.io/procrasti-win/)**
+
+*(This link is permanently hosted on GitHub Pages and is accessible anywhere, anytime, with zero expiration).*
+
+---
+
+## 🎬 Product Demo
+
+![Procrasti-WIN Interactive Demo](demo.gif)
 
 ---
 
@@ -77,7 +87,7 @@ When avoiding work, people naturally engage in "productive avoidance" (cleaning,
 * **AI Engine**: Google Gemini API integration with automatic fallback to an intelligent offline heuristic engine.
 * **Animations & Audio**: HTML5 Canvas Confetti engine + Web Audio API frequency synthesizer (no external CDNs or heavy packages).
 * **Styling**: Responsive dark-mode glassmorphism design with CSS variables.
-* **Deployment**: Docker + Nginx on Google Cloud Run.
+* **Hosting**: Permanent 24/7 hosting on GitHub Pages + containerized Google Cloud Run mirror.
 
 ---
 
@@ -110,7 +120,7 @@ docker run -p 8080:8080 procrasti-win
 ---
 
 ## 🔑 Gemini AI Configuration (Optional)
-The application works **100% offline out-of-the-box**. 
+The application works **100% offline out-of-the-box** using built-in psychological heuristics.
 
 If you want live dynamic LLM responses from Google Gemini:
 1. Click the **⚙️ API** button in the header.
