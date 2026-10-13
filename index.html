@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procrasti-WIN — The Procrastination Assistant</title>
+  <meta name="description" content="Turn avoiding work into accidental productivity. AI analyzes why you are procrastinating and gives secretly productive micro-tasks.">
+  <meta name="keywords" content="procrastination, productivity, AI assistant, guilt-o-meter, Gemini AI, habit builder">
+  <meta property="og:title" content="Procrasti-WIN — Make Avoiding Work Accidentally Productive">
+  <meta property="og:description" content="AI diagnoses your procrastination psychology and offers 5 secretly productive tasks. Try the Guilt-O-Meter!">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Procrasti-WIN 🧠⚡">
+  <meta name="twitter:description" content="Make avoiding work accidentally productive with AI.">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --bg-card: rgba(22, 24, 38, 0.75);
+      --bg-card-hover: rgba(30, 34, 54, 0.85);
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(139, 92, 246, 0.4);
+      --primary: #8b5cf6;
+      --primary-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%);
+      --accent-pink: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-glow: 0 10px 40px -10px rgba(139, 92, 246, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(6, 182, 212, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-size: 36px 36px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 11, 16, 0.75);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+    }
+
+    .tagline-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c4b5fd;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .streak-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.8rem;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+      border-radius: 999px;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      max-width: 760px;
+      margin: 1rem auto 2.5rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(236, 72, 153, 0.12);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      color: #f472b6;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      animation: pulse-glow 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulse-glow {
+      from { box-shadow: 0 0 10px rgba(236, 72, 153, 0.1); }
+      to { box-shadow: 0 0 20px rgba(236, 72, 153, 0.35); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Glass Panels */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    /* Interactive Tabs */
+    .tab-bar {
+      display: flex;
+      background: rgba(15, 17, 26, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem;
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+      gap: 0.3rem;
+      position: relative;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.65rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: var(--primary-gradient);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* View Sections */
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Avoidance Input Form */
+    .avoidance-box {
+      max-width: 780px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-pink);
+      margin-bottom: 0.6rem;
+    }
+
+    .task-input-wrapper {
+      position: relative;
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .task-input {
+      width: 100%;
+      background: rgba(10, 12, 20, 0.7);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      font-size: 1.15rem;
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .task-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+    }
+
+    .quick-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+
+    .example-tag {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .example-tag:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Vibe Selector */
+    .vibe-selector-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .vibe-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .vibe-chips {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    .vibe-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .vibe-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .vibe-chip.selected {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
+    }
+
+    .vibe-emoji {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .vibe-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .vibe-sub {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      display: block;
+    }
+
+    /* Action Buttons */
+    .btn-primary {
+      width: 100%;
+      background: var(--primary-gradient);
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Diagnosis Card */
+    .diagnosis-panel {
+      margin-top: 2rem;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .psychology-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--accent-cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .diagnosis-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .diagnosis-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 2-Minute Trick Sub-banner */
+    .two-min-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(236, 72, 153, 0.08));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .two-min-text h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .two-min-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .btn-micro {
+      background: #fbbf24;
+      color: #1e1b4b;
+      border: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .btn-micro:hover {
+      background: #f59e0b;
+      transform: scale(1.03);
+    }
+
+    /* Tasks List */
+    .tasks-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .task-card {
+      background: rgba(14, 16, 26, 0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      background: rgba(22, 26, 42, 0.85);
+      transform: translateX(4px);
+    }
+
+    .task-card.completed {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+
+    .task-checkbox-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+      color: transparent;
+      transition: all 0.2s ease;
+    }
+
+    .task-card.completed .task-checkbox-btn {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: #fff;
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .task-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    .task-time {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .secret-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .task-card.completed .secret-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Productivity Counter Bar */
+    .productivity-converter-bar {
+      margin-top: 2rem;
+      background: rgba(15, 18, 30, 0.85);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .conv-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .conv-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .conv-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-emerald);
+      font-family: var(--font-mono);
+    }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+      border-radius: 999px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .conv-caption {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Guilt-o-meter Widget */
+    .guilt-widget {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 40;
+      width: 320px;
+      max-width: calc(100vw - 3rem);
+      background: rgba(18, 20, 32, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .guilt-widget.minimized {
+      transform: translateY(calc(100% - 46px));
+    }
+
+    .guilt-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+    }
+
+    .guilt-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .guilt-percentage {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #f87171;
+    }
+
+    .guilt-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+    }
+
+    .guilt-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      transition: width 0.4s ease;
+    }
+
+    .guilt-state-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      min-height: 2.2em;
+    }
+
+    .roast-box {
+      display: none;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-bottom: 0.75rem;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    .btn-roast-tweet {
+      width: 100%;
+      background: #1d9bf0;
+      color: #fff;
+      border: none;
+      padding: 0.45rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    /* Personality Quiz View */
+    .quiz-container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .quiz-step-indicator {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-question-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .quiz-opt-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-size: 0.95rem;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .quiz-opt-btn:hover {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+
+    .personality-card {
+      background: linear-gradient(145deg, rgba(30, 27, 75, 0.85), rgba(15, 23, 42, 0.85));
+      border: 2px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .personality-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 0.35rem 1rem;
+      background: var(--primary-gradient);
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .personality-name {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .personality-tagline {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .personality-traits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      text-align: left;
+      margin-bottom: 1.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+    }
+
+    .trait-col h5 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+
+    .trait-col p {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .personality-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* AI Therapist Mode */
+    .therapist-container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .chat-box {
+      background: rgba(12, 14, 22, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      height: 420px;
+      overflow-y: auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      scroll-behavior: smooth;
+    }
+
+    .chat-bubble {
+      max-width: 82%;
+      padding: 0.85rem 1.15rem;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .chat-bubble.therapist {
+      align-self: flex-start;
+      background: rgba(30, 34, 54, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-bubble.therapist .dr-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 0.3rem;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--primary-gradient);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input-bar {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(14, 16, 26, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.15rem;
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* History Wall */
+    .history-container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .history-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .history-item {
+      background: rgba(15, 17, 28, 0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .history-left h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .history-left p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badge-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .badge-status.active {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-status.autodone {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Social Shame Tool */
+    .shame-container {
+      max-width: 650px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .tweet-preview-card {
+      background: #000;
+      border: 1px solid #2f3336;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: left;
+      margin: 1.5rem auto;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .tweet-author {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tweet-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .tweet-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .tweet-handle {
+      color: #71767b;
+      font-size: 0.85rem;
+    }
+
+    .tweet-body {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      color: #e7e9ea;
+      margin-bottom: 1rem;
+      white-space: pre-line;
+    }
+
+    /* Settings Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: #141624;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 500px;
+      width: 100%;
+      padding: 1.75rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-dialog h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-dialog p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    /* Canvas Confetti */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: auto;
+    }
+
+    @media (max-width: 640px) {
+      .vibe-chips {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .tab-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+        justify-content: flex-start;
+      }
+      .guilt-widget {
+        bottom: 0.75rem;
+        right: 0.75rem;
+        left: 0.75rem;
+        width: auto;
+      }
+      .personality-traits {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Sticky Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-badge" onclick="switchTab('converter'); return false;">
+        <div class="logo-icon">🧠</div>
+        <div>
+          Procrasti-WIN
+          <div class="tagline-pill">Turn Delay into Gold</div>
+        </div>
+      </a>
+      
+      <div class="nav-actions">
+        <div class="streak-pill" id="streak-counter" title="Consecutive tasks converted">
+          🔥 <span id="streak-count">3</span> Streak
+        </div>
+        <button class="btn-ghost" id="btn-open-settings" title="Gemini API Key Settings" aria-label="Settings">
+          ⚙️ <span>API</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main App Layout -->
+  <main>
+    <!-- Hero Banner -->
+    <section class="hero">
+      <div class="hero-badge">
+        ✨ Powered by Gemini AI Psychology Engine
+      </div>
+      <h1>
+        Make Avoiding Work <br>
+        <span class="gradient-text">Accidentally Productive</span>
+      </h1>
+      <p>
+        Tell us what you're fiercely avoiding. We'll decode the underlying emotional resistance and trick your brain with 5 secretly productive micro-missions.
+      </p>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('converter')" id="tab-converter">
+        🎯 Tasks & Vibe
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('quiz')" id="tab-quiz">
+        🧩 Personality Quiz
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('therapist')" id="tab-therapist">
+        🛋️ AI Therapist
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('shame')" id="tab-shame">
+        📣 Public Pledge
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('history')" id="tab-history">
+        📜 Hall of Delay
+      </button>
+    </div>
+
+    <!-- VIEW 1: CORE CONVERTER & VIBE CHECK -->
+    <div class="view-panel active" id="view-converter">
+      <div class="glass-card avoidance-box">
+        <label for="task-input-field" class="input-label">What are you avoiding right now?</label>
+        
+        <div class="task-input-wrapper">
+          <input 
+            type="text" 
+            id="task-input-field" 
+            class="task-input" 
+            placeholder="e.g. Write master's thesis, Tax returns, Clean garage..." 
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="quick-examples">
+          <span style="font-size:0.75rem; color:var(--text-dim);">Try these:</span>
+          <button class="example-tag" onclick="fillExample('File 2025 Tax Returns')">🧾 Taxes</button>
+          <button class="example-tag" onclick="fillExample('Write Master Thesis conclusion')">🎓 Thesis</button>
+          <button class="example-tag" onclick="fillExample('Prepare quarterly board deck')">📊 Board Deck</button>
+          <button class="example-tag" onclick="fillExample('Go to the gym for leg day')">🏋️ Gym Workout</button>
+        </div>
+
+        <!-- Vibe Check Selector -->
+        <div class="vibe-selector-group">
+          <div class="vibe-title">
+            <span>⚡ Step 2: What is your current energy vibe?</span>
+          </div>
+          <div class="vibe-chips" role="radiogroup" aria-label="Energy vibe selector">
+            <div class="vibe-chip" data-vibe="dead" onclick="selectVibe('dead')">
+              <span class="vibe-emoji">😴</span>
+              <span class="vibe-name">Dead</span>
+              <span class="vibe-sub">Sub-zero energy</span>
+            </div>
+            <div class="vibe-chip selected" data-vibe="meh" onclick="selectVibe('meh')">
+              <span class="vibe-emoji">😐</span>
+              <span class="vibe-name">Meh</span>
+              <span class="vibe-sub">Low willpower</span>
+            </div>
+            <div class="vibe-chip" data-vibe="hyped" onclick="selectVibe('hyped')">
+              <span class="vibe-emoji">⚡</span>
+              <span class="vibe-name">Hyped</span>
+              <span class="vibe-sub">Chaotic overdrive</span>
+            </div>
+            <div class="vibe-chip" data-vibe="anxious" onclick="selectVibe('anxious')">
+              <span class="vibe-emoji">😰</span>
+              <span class="vibe-name">Anxious</span>
+              <span class="vibe-sub">Paralyzed dread</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="btn-generate-tasks" onclick="analyzeAndGenerateTasks()">
+          <span>🔮 Analyze Resistance & Give Me 5 Productive Delays</span>
+        </button>
+
+        <!-- Loading state feedback -->
+        <div id="ai-loading" style="display:none; text-align:center; padding: 1.5rem 0;">
+          <div class="spinner"></div>
+          <p id="loading-quote" style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-muted); font-style:italic;">
+            "Consulting the procrastination archives..."
+          </p>
+        </div>
+
+        <!-- Diagnosis & Suggested Tasks Result -->
+        <div class="diagnosis-panel" id="diagnosis-results">
+          <hr style="border:none; border-top:1px solid var(--border); margin: 1.5rem 0;">
+          
+          <div class="psychology-pill" id="psych-pill">
+            🧠 Core Diagnosis: Fear of Imperfection
+          </div>
+          <h3 class="diagnosis-title" id="diag-headline">Why your brain is protesting:</h3>
+          <p class="diagnosis-desc" id="diag-body">
+            You aren't being lazy; you subconsciously equate writing with being judged. So let's fool your nervous system with lower-stakes detour tasks.
+          </p>
+
+          <!-- 2-Minute Trick Engine Card -->
+          <div class="two-min-card" id="micro-trick-box">
+            <div class="two-min-text">
+              <h4>⏱️ The 2-Minute Gateway Trick</h4>
+              <p id="micro-trick-desc">"Just open the document and write 1 joke or your name at the top."</p>
+            </div>
+            <button class="btn-micro" onclick="completeMicroTrick()">
+              ✓ Done (10s)
+            </button>
+          </div>
+
+          <!-- Tasks List -->
+          <div class="tasks-grid" id="tasks-list">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Secret Productivity Meter -->
+          <div class="productivity-converter-bar">
+            <div class="conv-header">
+              <span class="conv-label">Secret Productivity Score Unlocked:</span>
+              <span class="conv-value" id="conv-pct">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="conv-bar"></div>
+            </div>
+            <p class="conv-caption" id="conv-caption">
+              Complete these tasks! You think you're wasting time, but you're actually completing essential foundation work.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: PROCRASTINATION PERSONALITY QUIZ -->
+    <div class="view-panel" id="view-quiz">
+      <div class="glass-card quiz-container">
+        <div id="quiz-flow">
+          <div class="quiz-step-indicator" id="quiz-progress-text">Question 1 of 4</div>
+          <h2 class="quiz-question-text" id="quiz-question-title">When faced with a looming deadline, what is your immediate reflex?</h2>
+          <div class="quiz-options" id="quiz-options-list">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="quiz-result-card" style="display:none;">
+          <div class="personality-card">
+            <div class="personality-badge" id="card-badge">THE PERFECTIONIST</div>
+            <h2 class="personality-name" id="card-name">The Hyper-Scrutinizer</h2>
+            <p class="personality-tagline" id="card-tagline">"If it's not a masterwork, it's a crime against humanity."</p>
+            
+            <div class="personality-traits">
+              <div class="trait-col">
+                <h5>Secret Strength</h5>
+                <p id="card-strength">Produces peerless quality when momentum actually strikes.</p>
+              </div>
+              <div class="trait-col">
+                <h5>Achilles' Heel</h5>
+                <p id="card-heel">Spends 3 hours choosing the document header font.</p>
+              </div>
+              <div class="trait-col">
+                <h5>Productive Detour</h5>
+                <p id="card-detour">Drafting in Comic Sans so you stop taking yourself so seriously.</p>
+              </div>
+              <div class="trait-col">
+                <h5>Guilt Rating</h5>
+                <p id="card-guilt">94% Existential Dread</p>
+              </div>
+            </div>
+
+            <div class="personality-actions">
+              <button class="btn-primary" onclick="sharePersonality()">
+                🐦 Share Personality on X
+              </button>
+              <button class="btn-ghost" onclick="resetQuiz()">
+                🔄 Retake Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: AI THERAPIST MODE -->
+    <div class="view-panel" id="view-therapist">
+      <div class="glass-card therapist-container">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <div>
+            <h2 style="font-size:1.35rem; font-weight:800;">🛋️ Dr. Delay, Psy.D.</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted);">Licensed Clinical Procrastinationologist</p>
+          </div>
+          <button class="btn-ghost" onclick="clearTherapistChat()">Clear Couch</button>
+        </div>
+
+        <div class="chat-box" id="therapist-chat-box">
+          <div class="chat-bubble therapist">
+            <div class="dr-header">Dr. Delay • 100% Confidential</div>
+            Welcome. Lie down on this virtual leather sofa. Tell me: what task are you running away from right now, and what lie did your brain tell you to justify it?
+          </div>
+        </div>
+
+        <form class="chat-input-bar" onsubmit="handleTherapistSubmit(event)">
+          <input 
+            type="text" 
+            id="therapist-input" 
+            class="chat-input" 
+            placeholder="e.g. I need to write an email, but I convinced myself I have to organize my spice rack..."
+            autocomplete="off"
+          />
+          <button type="submit" class="btn-primary" style="width:auto; padding:0 1.25rem;">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- VIEW 4: PUBLIC PLEDGE & SOCIAL SHAME -->
+    <div class="view-panel" id="view-shame">
+      <div class="glass-card shame-container">
+        <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;">📣 The Social Accountability Generator</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          Psychological research proves public humiliation is 4.7x more effective than self-discipline. Generate a weaponized commitment tweet.
+        </p>
+
+        <div class="task-input-wrapper" style="margin-bottom:1rem;">
+          <input 
+            type="text" 
+            id="shame-task-input" 
+            class="task-input" 
+            placeholder="What will you finish today or face public mockery?"
+            value="Finish my Q3 presentation deck"
+          />
+        </div>
+
+        <div class="tweet-preview-card" id="tweet-card">
+          <div class="tweet-author">
+            <div class="tweet-avatar">🔥</div>
+            <div>
+              <div class="tweet-name">Certified Procrastinator</div>
+              <div class="tweet-handle">@AccidentalGenius</div>
+            </div>
+          </div>
+          <div class="tweet-body" id="tweet-preview-text">
+            🚨 PUBLIC PLEDGE OF SHAME:
+            If I don't finish "Finish my Q3 presentation deck" by midnight, everyone who likes this tweet has legal permission to roast my life choices.
+
+            #ProcrastiWIN #ProductiveProcrastination
+          </div>
+        </div>
+
+        <div style="display:flex; gap:0.75rem; justify-content:center;">
+          <button class="btn-primary" style="background:#1d9bf0;" onclick="postAccountabilityTweet()">
+            🐦 Launch Accountability Tweet
+          </button>
+          <button class="btn-ghost" onclick="copyTweetText()">
+            📋 Copy Text
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: HALL OF DELAY (HISTORY WALL) -->
+    <div class="view-panel" id="view-history">
+      <div class="glass-card history-container">
+        <div class="history-header">
+          <div>
+            <h2 style="font-size:1.35rem; font-weight:800;">📜 Hall of Delay & Accidental Fame</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted);">
+              Track your avoided feats. Tasks avoided long enough earn automated satirical clearance.
+            </p>
+          </div>
+          <button class="btn-ghost" onclick="clearHistory()">Clear History</button>
+        </div>
+
+        <div class="history-grid" id="history-grid-items">
+          <!-- Dynamically populated from LocalStorage -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIVE GUILT-O-METER FLOATING DOCK -->
+  <aside class="guilt-widget" id="guilt-dock" aria-label="AI Guilt-O-Meter">
+    <div class="guilt-top" onclick="toggleGuiltWidget()">
+      <div class="guilt-title">
+        <span>⏱️ Guilt-O-Meter</span>
+        <span style="font-size:0.75rem; color:var(--text-dim);">(Click to toggle)</span>
+      </div>
+      <div class="guilt-percentage" id="guilt-val">15%</div>
+    </div>
+    <div class="guilt-bar">
+      <div class="guilt-fill" id="guilt-progress-fill" style="width: 15%;"></div>
+    </div>
+    <div class="guilt-state-text" id="guilt-message">
+      You are casually stalling. Heart rate normal, delusion intact.
+    </div>
+
+    <!-- Roast Popup when reaching 100% -->
+    <div class="roast-box" id="roast-container">
+      <strong>🔥 MAXIMUM GUILT TRIGGERED:</strong>
+      <p id="roast-text" style="margin: 0.3rem 0;">
+        "You've been organizing bookmarks for 42 minutes. The Nobel committee is not calling."
+      </p>
+      <button class="btn-roast-tweet" onclick="shareRoastOnX()">
+        🐦 Tweet this roast
+      </button>
+    </div>
+  </aside>
+
+  <!-- API KEY SETTINGS MODAL -->
+  <div class="modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-heading">
+    <div class="modal-dialog">
+      <h3 id="settings-heading">Gemini AI Configuration</h3>
+      <p>
+        Procrasti-WIN includes a comprehensive built-in offline smart heuristic engine. To unleash custom dynamic generative roasts and psychiatric advice, paste your Google Gemini API Key below.
+      </p>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.4rem;">
+          Gemini API Key:
+        </label>
+        <input 
+          type="password" 
+          id="api-key-input" 
+          class="task-input" 
+          style="font-size:0.95rem; padding:0.75rem;" 
+          placeholder="AIzaSy..."
+        />
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn-ghost" onclick="closeSettingsModal()">Cancel</button>
+        <button class="btn-primary" style="width:auto; padding:0.6rem 1.25rem;" onclick="saveApiKey()">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Procrasti-WIN © 2026 • The accidentally productive ecosystem.</p>
+    <p style="margin-top:0.3rem; font-size:0.75rem; color:var(--text-dim);">
+      Built with Vanilla HTML5, CSS3, Web Animations, Web Audio API & Gemini AI. Zero external dependencies.
+    </p>
+  </footer>
+
+  <!-- APPLICATION LOGIC -->
+  <script>
+    /* STATE & STORAGE */
+    const STORAGE_KEY_API = 'pw_gemini_api_key';
+    const STORAGE_KEY_STREAK = 'pw_streak';
+    const STORAGE_KEY_HISTORY = 'pw_history';
+    const STORAGE_KEY_GUILT_START = 'pw_avoid_start_time';
+
+    let currentVibe = 'meh';
+    let currentTaskName = '';
+    let currentTasksList = [];
+    let completedTaskCount = 0;
+    let guiltTimerInterval = null;
+    let avoidanceStartTime = Date.now();
+    let currentRoastMessage = '';
+
+    // Audio synthesizer for dopamine hit
+    let audioCtx = null;
+
+    function playDopamineChime() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now); // D5
+        osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+        gain1.gain.setValueAtTime(0.2, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.4);
+      } catch (e) {
+        console.warn('Audio not allowed or supported', e);
+      }
+    }
+
+    /* INIT & EVENT LISTENERS */
+    document.addEventListener('DOMContentLoaded', () => {
+      initStreak();
+      initGuiltMeter();
+      initHistoryWall();
+      initQuiz();
+      setupModal();
+
+      document.getElementById('task-input-field').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') analyzeAndGenerateTasks();
+      });
+
+      document.getElementById('shame-task-input').addEventListener('input', (e) => {
+        updateShameTweetPreview(e.target.value);
+      });
+    });
+
+    /* TABS NAVIGATION */
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(view => view.classList.remove('active'));
+
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      const targetView = document.getElementById(`view-${tabId}`);
+      if (targetTab && targetView) {
+        targetTab.classList.add('active');
+        targetView.classList.add('active');
+      }
+    }
+
+    /* VIBE CHECK */
+    function selectVibe(vibe) {
+      currentVibe = vibe;
+      document.querySelectorAll('.vibe-chip').forEach(chip => {
+        chip.classList.toggle('selected', chip.dataset.vibe === vibe);
+      });
+    }
+
+    function fillExample(text) {
+      const input = document.getElementById('task-input-field');
+      input.value = text;
+      input.focus();
+    }
+
+    /* CORE LOGIC: ANALYZE & GENERATE TASKS */
+    const FUNNY_QUOTES = [
+      "Consulting the archives of noble procrastinators...",
+      "Analyzing why your brain believes vacuuming right now is an urgent emergency...",
+      "Formulating devious ways to make you accidentally productive...",
+      "Converting existential dread into low-effort research...",
+      "Recalibrating dopamine pathways..."
+    ];
+
+    async function analyzeAndGenerateTasks() {
+      const taskInput = document.getElementById('task-input-field');
+      const taskName = taskInput.value.trim();
+      if (!taskName) {
+        taskInput.focus();
+        taskInput.style.borderColor = '#ef4444';
+        setTimeout(() => taskInput.style.borderColor = '', 1500);
+        return;
+      }
+
+      currentTaskName = taskName;
+      resetGuiltTimer();
+      saveToHistory(taskName, 'In Progress');
+
+      const loader = document.getElementById('ai-loading');
+      const quoteEl = document.getElementById('loading-quote');
+      const btn = document.getElementById('btn-generate-tasks');
+      const diagPanel = document.getElementById('diagnosis-results');
+
+      loader.style.display = 'block';
+      quoteEl.textContent = FUNNY_QUOTES[Math.floor(Math.random() * FUNNY_QUOTES.length)];
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      diagPanel.style.display = 'none';
+
+      try {
+        const apiKey = localStorage.getItem(STORAGE_KEY_API);
+        let result = null;
+
+        if (apiKey) {
+          result = await fetchGeminiTasks(taskName, currentVibe, apiKey);
+        }
+
+        if (!result) {
+          result = generateOfflineFallbackTasks(taskName, currentVibe);
+        }
+
+        renderTasksResult(result);
+      } catch (err) {
+        console.error(err);
+        const fallback = generateOfflineFallbackTasks(taskName, currentVibe);
+        renderTasksResult(fallback);
+      } finally {
+        loader.style.display = 'none';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        diagPanel.style.display = 'block';
+      }
+    }
+
+    function renderTasksResult(data) {
+      document.getElementById('psych-pill').textContent = `🧠 Psychology Diagnosis: ${data.diagnosisCategory}`;
+      document.getElementById('diag-headline').textContent = data.headline;
+      document.getElementById('diag-body').textContent = data.explanation;
+      document.getElementById('micro-trick-desc').textContent = `"${data.twoMinuteTrick}"`;
+
+      currentTasksList = data.tasks;
+      completedTaskCount = 0;
+      updateProductivityProgress(0);
+
+      const tasksContainer = document.getElementById('tasks-list');
+      tasksContainer.innerHTML = '';
+
+      data.tasks.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        card.id = `task-card-${idx}`;
+        card.innerHTML = `
+          <button class="task-checkbox-btn" onclick="toggleTaskCompletion(${idx})" aria-label="Mark task done">
+            ✓
+          </button>
+          <div class="task-content">
+            <div class="task-header">
+              <span class="task-title">${escapeHtml(item.title)}</span>
+              <div class="task-meta">
+                <span class="task-time">⏳ ${escapeHtml(item.time)}</span>
+              </div>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-muted);">${escapeHtml(item.description)}</div>
+            <div class="secret-badge">
+              🕵️ Secretly = ${escapeHtml(item.secretBenefit)} (+${item.productivityScore}%)
+            </div>
+          </div>
+        `;
+        tasksContainer.appendChild(card);
+      });
+    }
+
+    function toggleTaskCompletion(index) {
+      const card = document.getElementById(`task-card-${index}`);
+      if (!card) return;
+
+      const isCompleted = card.classList.toggle('completed');
+      if (isCompleted) {
+        completedTaskCount++;
+        playDopamineChime();
+        triggerConfettiBurst();
+        incrementStreak();
+      } else {
+        completedTaskCount = Math.max(0, completedTaskCount - 1);
+      }
+
+      let totalUnlocked = 0;
+      currentTasksList.forEach((t, i) => {
+        const c = document.getElementById(`task-card-${i}`);
+        if (c && c.classList.contains('completed')) {
+          totalUnlocked += t.productivityScore;
+        }
+      });
+
+      updateProductivityProgress(Math.min(100, totalUnlocked));
+    }
+
+    function completeMicroTrick() {
+      playDopamineChime();
+      triggerConfettiBurst();
+      const trickCard = document.getElementById('micro-trick-box');
+      trickCard.style.opacity = '0.6';
+      trickCard.style.borderColor = 'var(--accent-emerald)';
+      const btn = trickCard.querySelector('.btn-micro');
+      btn.textContent = '🎉 Nailed it!';
+      btn.disabled = true;
+      incrementStreak();
+    }
+
+    function updateProductivityProgress(percent) {
+      const bar = document.getElementById('conv-bar');
+      const pctLabel = document.getElementById('conv-pct');
+      const caption = document.getElementById('conv-caption');
+
+      bar.style.width = `${percent}%`;
+      pctLabel.textContent = `${percent}%`;
+
+      if (percent >= 100) {
+        caption.innerHTML = `🌟 <strong>HOLY MOLY!</strong> You accidentally did 100% of the foundational heavy lifting. You are now legally immune to procrastination guilt!`;
+        triggerConfettiBurst(true);
+      } else if (percent >= 50) {
+        caption.innerHTML = `🚀 You thought you were procrastinating, but you've already demolished half the cognitive friction!`;
+      } else if (percent > 0) {
+        caption.innerHTML = `✨ Every detour counts! You've primed your subconscious without suffering.`;
+      }
+    }
+
+    /* OFFLINE / HEURISTIC FALLBACK ENGINE */
+    function generateOfflineFallbackTasks(task, vibe) {
+      const isDead = vibe === 'dead';
+      const isAnxious = vibe === 'anxious';
+      const isHyped = vibe === 'hyped';
+
+      let category = "Executive Dysfunction & Overwhelm";
+      let headline = "Your brain is intimidated by the sheer scale of this.";
+      let explanation = `When you think about "${task}", your brain visualizes a mountain of suffering. To defend you, it freezes. We will sneak through the back door.`;
+
+      if (isAnxious) {
+        category = "Fear of Imperfection / Judgment";
+        headline = "Your inner critic is running a kangaroo court.";
+        explanation = `You care about "${task}" so deeply that anything less than perfection feels like disaster. Lowering the stakes dissolves the freeze state.`;
+      } else if (isDead) {
+        category = "Dopamine Depletion";
+        headline = "Your battery is literally at 2% power.";
+        explanation = `You don't need discipline right now; you need zero-effort friction elimination. We will disguise work as passive relaxation.`;
+      } else if (isHyped) {
+        category = "Chaotic Overdrive";
+        headline = "You have 10,000 tabs open in your frontal lobe.";
+        explanation = `You have high energy but low directional vector. We will channel your restless frenzy into high-velocity micro sprints.`;
+      }
+
+      const tasks = [
+        {
+          title: `Watch 1 video / breakdown related to "${task}"`,
+          time: isDead ? "8 mins" : "5 mins",
+          description: "Sit back and passively absorb someone else discussing this concept.",
+          secretBenefit: "High-yield conceptual research",
+          productivityScore: 20
+        },
+        {
+          title: "Clean and arrange your immediate workspace for 7 minutes",
+          time: "7 mins",
+          description: "Clear the coffee cups and trash right in front of your eyes.",
+          secretBenefit: "Reduces visual cortisol & restores focus",
+          productivityScore: 15
+        },
+        {
+          title: `Voice note or text a friend: "Guess what is annoying about ${task}"`,
+          time: "3 mins",
+          description: "Complain out loud to an unsuspecting human about the weirdest roadblock.",
+          secretBenefit: "Rubber duck debugging & articulation",
+          productivityScore: 25
+        },
+        {
+          title: `Make an ugly, terrible 3-bullet-point draft of "${task}"`,
+          time: isHyped ? "2 mins" : "4 mins",
+          description: "Intentionally make it stupid and flawed. Spelling errors encouraged.",
+          secretBenefit: "Breaks the terrifying blank-canvas paralysis",
+          productivityScore: 25
+        },
+        {
+          title: "Hydrate and stretch your shoulders for 90 seconds",
+          time: "2 mins",
+          description: "Drink a full glass of cold water like a sophisticated houseplant.",
+          secretBenefit: "Cerebral blood flow & nervous system reset",
+          productivityScore: 15
+        }
+      ];
+
+      return {
+        diagnosisCategory: category,
+        headline: headline,
+        explanation: explanation,
+        twoMinuteTrick: `Open whatever tab or tool is needed for "${task}", type literally 3 words, then walk away.`,
+        tasks: tasks
+      };
+    }
+
+    /* GEMINI API INTEGRATION */
+    async function fetchGeminiTasks(task, vibe, apiKey) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const systemPrompt = `You are Procrasti-WIN, a world-class witty psychologist and procrastination researcher.
+The user is avoiding: "${task}".
+Their current energy vibe is: "${vibe}".
+Return a strictly valid JSON object with this exact schema:
+{
+  "diagnosisCategory": "Short psychology category (e.g. Fear of Judgment, Dopamine Starvation, Executive Overwhelm)",
+  "headline": "A funny, insightful 1-sentence truth about why they are avoiding this",
+  "explanation": "A 2-sentence humorous explanation validating their feeling and explaining the covert strategy",
+  "twoMinuteTrick": "A laughably tiny 120-second micro-step (e.g. Just open the doc and write 1 word)",
+  "tasks": [
+    {
+      "title": "Fun procrastination task title",
+      "time": "e.g. 5 mins",
+      "description": "Short explanation",
+      "secretBenefit": "What real productive progress this accomplishes (e.g. Rubber Duck Debugging, Baseline Framing)",
+      "productivityScore": 20
+    }
+  ]
+}
+Ensure exactly 5 tasks whose productivityScore sum to 100. Output ONLY raw JSON, no markdown backticks.`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Gemini API error: ${response.status}`);
+      }
+
+      const resJson = await response.json();
+      let text = resJson.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(text);
+    }
+
+    /* AI GUILT-O-METER & ROAST ENGINE */
+    function initGuiltMeter() {
+      const savedStart = localStorage.getItem(STORAGE_KEY_GUILT_START);
+      avoidanceStartTime = savedStart ? parseInt(savedStart, 10) : Date.now();
+      localStorage.setItem(STORAGE_KEY_GUILT_START, avoidanceStartTime.toString());
+
+      updateGuiltScore();
+      guiltTimerInterval = setInterval(updateGuiltScore, 10000);
+    }
+
+    function resetGuiltTimer() {
+      avoidanceStartTime = Date.now();
+      localStorage.setItem(STORAGE_KEY_GUILT_START, avoidanceStartTime.toString());
+      updateGuiltScore();
+    }
+
+    function toggleGuiltWidget() {
+      const widget = document.getElementById('guilt-dock');
+      widget.classList.toggle('minimized');
+    }
+
+    const ROAST_TEMPLATES = [
+      "You have spent 48 minutes looking at custom mechanical keyboards instead of finishing your project.",
+      "At this pace of avoidance, artificial intelligence will achieve AGI, retire, and write your paper for you.",
+      "You have cleaned the kitchen sink 3 times today. It shines brighter than your future if you don't start.",
+      "Your brain would literally rather calculate the aerodynamics of a cow than do 10 minutes of real work.",
+      "You've been in 'prep mode' so long you're now a qualified architectural surveyor of your own desk."
+    ];
+
+    function updateGuiltScore() {
+      const elapsedMinutes = Math.floor((Date.now() - avoidanceStartTime) / (1000 * 60));
+      let guilt = Math.min(100, Math.max(15, Math.floor(15 + elapsedMinutes * 1.8)));
+
+      const fill = document.getElementById('guilt-progress-fill');
+      const val = document.getElementById('guilt-val');
+      const msg = document.getElementById('guilt-message');
+      const roastBox = document.getElementById('roast-container');
+      const roastTxt = document.getElementById('roast-text');
+
+      fill.style.width = `${guilt}%`;
+      val.textContent = `${guilt}%`;
+
+      if (guilt < 40) {
+        msg.textContent = "Mild procrastination. You believe you'll 'start right at the top of the hour.'";
+        roastBox.style.display = 'none';
+      } else if (guilt < 75) {
+        msg.textContent = "Elevated avoidance. You are researching obscure trivia you will never need.";
+        roastBox.style.display = 'none';
+      } else if (guilt < 100) {
+        msg.textContent = "Critical zone. The sun is setting. You are renegotiating with yourself.";
+        roastBox.style.display = 'none';
+      } else {
+        msg.textContent = "🚨 100% GUILT CAPACITY EXCEEDED! Emotional meltdown imminent.";
+        if (roastBox.style.display !== 'block') {
+          roastBox.style.display = 'block';
+          currentRoastMessage = ROAST_TEMPLATES[Math.floor(Math.random() * ROAST_TEMPLATES.length)];
+          roastTxt.textContent = `"${currentRoastMessage}"`;
+        }
+      }
+    }
+
+    function shareRoastOnX() {
+      const text = encodeURIComponent(`The AI Guilt-O-Meter on Procrasti-WIN just roasted me to ashes:\n\n"${currentRoastMessage}"\n\nSend help: https://procrastiwin.app`);
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    }
+
+    /* PERSONALITY QUIZ */
+    const QUIZ_QUESTIONS = [
+      {
+        q: "It's 11 PM before tomorrow's 9 AM deadline. What are you doing?",
+        opts: [
+          { text: "Staring at the ceiling plotting a revolutionary new life path in Bali", type: "dreamer" },
+          { text: "Reworking the slide deck color palette for the 14th time", type: "perfectionist" },
+          { text: "Curled under a blanket paralyzed by how many emails are unread", type: "overwhelmed" },
+          { text: "Binge-watching YouTube documentaries on medieval siege weapons out of spite", type: "rebel" }
+        ]
+      },
+      {
+        q: "What is your main internal excuse for not starting?",
+        opts: [
+          { text: "'I just need the grand visionary inspiration to strike first.'", type: "dreamer" },
+          { text: "'I can't start until I have 6 uninterrupted hours and perfect lighting.'", type: "perfectionist" },
+          { text: "'There are too many tiny steps, my brain is buffering.'", type: "overwhelmed" },
+          { text: "'Why should I do this anyway? Society's timeline is arbitrary.'", type: "rebel" }
+        ]
+      },
+      {
+        q: "Which 'productive detour' trap catches you most often?",
+        opts: [
+          { text: "Making elaborate Notion roadmaps and aesthetic vision boards", type: "dreamer" },
+          { text: "Organizing your files into meticulous nested subfolders", type: "perfectionist" },
+          { text: "Cleaning the grout between bathroom tiles with a toothbrush", type: "overwhelmed" },
+          { text: "Debating strangers on Reddit about things you don't care about", type: "rebel" }
+        ]
+      },
+      {
+        q: "If your procrastination had a spirit animal, it would be:",
+        opts: [
+          { text: "A unicorn gazing at distant mountains doing nothing", type: "dreamer" },
+          { text: "A cat obsessively licking the same single paw", type: "perfectionist" },
+          { text: "An overloaded fainting goat", type: "overwhelmed" },
+          { text: "A honey badger deliberately ignoring instructions", type: "rebel" }
+        ]
+      }
+    ];
+
+    const PERSONALITIES = {
+      dreamer: {
+        badge: "THE VISIONARY DRIFTER",
+        name: "The Dreamer",
+        tagline: '"A mastermind in conception, a phantom in execution."',
+        strength: "Unmatched big-picture ideation & boundless creative optimism.",
+        heel: "Mistakes thinking about doing the project for actually doing it.",
+        detour: "Convert visions into 5-minute physical sketches rather than grand essays.",
+        guilt: "65% (Buffered by sweet delusions)"
+      },
+      perfectionist: {
+        badge: "THE HYPER-SCRUTINIZER",
+        name: "The Perfectionist",
+        tagline: '"If it cannot be a masterpiece, it shall not exist."',
+        strength: "Incredible attention to detail when momentum unlocks.",
+        heel: "Spends 2 hours calibrating margins and formatting before typing word one.",
+        detour: "Drafting intentionally bad 'garbage drafts' to kill the fear.",
+        guilt: "95% (Pure internal torture)"
+      },
+      overwhelmed: {
+        badge: "THE SYSTEM OVERLOAD",
+        name: "The Overwhelmed",
+        tagline: '"So many tabs open the fan is screaming."',
+        strength: "Empathetic, multi-disciplinary awareness and conscientiousness.",
+        heel: "Paralysis by analysis when faced with more than 2 variables.",
+        detour: "The 2-Minute Gateway Rule: only do the literal first physical step.",
+        guilt: "88% (Exhausted dread)"
+      },
+      rebel: {
+        badge: "THE STRATEGIC DEFIANT",
+        name: "The Rebel",
+        tagline: '"You cannot tell me what to do, not even me."',
+        strength: "Fierce autonomy and intense bursts of adrenaline-fueled brilliance.",
+        heel: "Rebels against self-imposed discipline just to prove a point.",
+        detour: "Gamify the challenge by attempting to prove someone else wrong.",
+        guilt: "40% (Replaced by righteous indignation)"
+      }
+    };
+
+    let quizStep = 0;
+    let quizScores = { dreamer: 0, perfectionist: 0, overwhelmed: 0, rebel: 0 };
+
+    function initQuiz() {
+      quizStep = 0;
+      quizScores = { dreamer: 0, perfectionist: 0, overwhelmed: 0, rebel: 0 };
+      renderQuizStep();
+    }
+
+    function renderQuizStep() {
+      const q = QUIZ_QUESTIONS[quizStep];
+      if (!q) {
+        showQuizResult();
+        return;
+      }
+      document.getElementById('quiz-flow').style.display = 'block';
+      document.getElementById('quiz-result-card').style.display = 'none';
+
+      document.getElementById('quiz-progress-text').textContent = `Question ${quizStep + 1} of ${QUIZ_QUESTIONS.length}`;
+      document.getElementById('quiz-question-title').textContent = q.q;
+
+      const optsContainer = document.getElementById('quiz-options-list');
+      optsContainer.innerHTML = '';
+
+      q.opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => selectQuizAnswer(opt.type);
+        optsContainer.appendChild(btn);
+      });
+    }
+
+    function selectQuizAnswer(type) {
+      quizScores[type] = (quizScores[type] || 0) + 1;
+      quizStep++;
+      if (quizStep < QUIZ_QUESTIONS.length) {
+        renderQuizStep();
+      } else {
+        showQuizResult();
+      }
+    }
+
+    function showQuizResult() {
+      document.getElementById('quiz-flow').style.display = 'none';
+      const card = document.getElementById('quiz-result-card');
+      card.style.display = 'block';
+
+      let highestType = 'perfectionist';
+      let highestVal = -1;
+      for (const [k, v] of Object.entries(quizScores)) {
+        if (v > highestVal) {
+          highestVal = v;
+          highestType = k;
+        }
+      }
+
+      const p = PERSONALITIES[highestType] || PERSONALITIES.perfectionist;
+      document.getElementById('card-badge').textContent = p.badge;
+      document.getElementById('card-name').textContent = p.name;
+      document.getElementById('card-tagline').textContent = p.tagline;
+      document.getElementById('card-strength').textContent = p.strength;
+      document.getElementById('card-heel').textContent = p.heel;
+      document.getElementById('card-detour').textContent = p.detour;
+      document.getElementById('card-guilt').textContent = p.guilt;
+
+      triggerConfettiBurst();
+    }
+
+    function resetQuiz() {
+      initQuiz();
+    }
+
+    function sharePersonality() {
+      const name = document.getElementById('card-name').textContent;
+      const tagline = document.getElementById('card-tagline').textContent;
+      const text = encodeURIComponent(`I took the Procrasti-WIN personality quiz and got:\n\n🧠 ${name} — ${tagline}\n\nFind your productive avoidance style: https://procrastiwin.app`);
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    }
+
+    /* AI THERAPIST MODE (Dr. Delay) */
+    async function handleTherapistSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('therapist-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', text);
+      input.value = '';
+
+      const chatBox = document.getElementById('therapist-chat-box');
+
+      const typingBubble = document.createElement('div');
+      typingBubble.className = 'chat-bubble therapist';
+      typingBubble.id = 'typing-indicator';
+      typingBubble.innerHTML = `<div class="dr-header">Dr. Delay • Analyzing...</div><div class="spinner" style="width:14px; height:14px;"></div> Examining psychological avoidance...`;
+      chatBox.appendChild(typingBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const apiKey = localStorage.getItem(STORAGE_KEY_API);
+        let reply = '';
+
+        if (apiKey) {
+          reply = await fetchGeminiTherapistReply(text, apiKey);
+        } else {
+          reply = getOfflineTherapistReply(text);
+        }
+
+        const typingEl = document.getElementById('typing-indicator');
+        if (typingEl) typingEl.remove();
+
+        appendChatMessage('therapist', reply);
+      } catch (err) {
+        console.error(err);
+        const typingEl = document.getElementById('typing-indicator');
+        if (typingEl) typingEl.remove();
+        appendChatMessage('therapist', getOfflineTherapistReply(text));
+      }
+    }
+
+    function appendChatMessage(sender, text) {
+      const chatBox = document.getElementById('therapist-chat-box');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${sender}`;
+
+      if (sender === 'therapist') {
+        bubble.innerHTML = `
+          <div class="dr-header">Dr. Delay, Psy.D.</div>
+          <div>${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+        `;
+      } else {
+        bubble.textContent = text;
+      }
+
+      chatBox.appendChild(bubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function clearTherapistChat() {
+      const chatBox = document.getElementById('therapist-chat-box');
+      chatBox.innerHTML = `
+        <div class="chat-bubble therapist">
+          <div class="dr-header">Dr. Delay • 100% Confidential</div>
+          Couch sanitized. What fresh avoidance shall we analyze today?
+        </div>
+      `;
+    }
+
+    function getOfflineTherapistReply(userInput) {
+      const responses = [
+        `Fascinating defense mechanism. Notice how you tried to frame that as "essential prep work"? That is your subconscious shielding you from the vulnerability of producing imperfect output.\n\nHere is your immediate prescription: Open the task file, write literally one absurd or nonsensical sentence to defuse the tension, then drink water.`,
+        `Ah yes, textbook Executive Paralysis. You are treating this task as if failure would result in immediate exile to a deserted island. Let's remember: 80% of human work is merely average, and average work done today beats hypothetical perfection in 2035.\n\nYour prescription: Set a timer for 120 seconds. Do only the single clumsiest step, then stop.`,
+        `I hear deep existential fatigue in your words. When energy is depleted, willpower is a myth. You aren't lazy; your dopamine receptors are on strike.\n\nYour prescription: Give yourself official permission to do a terrible job for 5 minutes. A messy draft is infinitely more useful than an empty room.`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    async function fetchGeminiTherapistReply(userMsg, apiKey) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const systemPrompt = `You are Dr. Delay, a loving, satirical clinical psychologist specialized in procrastination.
+The user says: "${userMsg}".
+Give a witty, compassionate response (max 3-4 sentences) diagnosing the underlying emotional cause (e.g. fear of judgment, perfectionism, low dopamine) and END with exactly ONE laughably micro-actionable step (1-2 minutes). Keep it punchy and funny.`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }]
+        })
+      });
+
+      if (!response.ok) throw new Error('API failed');
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || getOfflineTherapistReply(userMsg);
+    }
+
+    /* PUBLIC PLEDGE & SOCIAL SHAME */
+    function updateShameTweetPreview(task) {
+      const cleaned = task.trim() || 'my secret neglected goal';
+      const text = `🚨 PUBLIC PLEDGE OF SHAME:
+If I don't finish "${cleaned}" by midnight, everyone who likes this tweet has legal permission to roast my life choices in the replies.
+
+#ProcrastiWIN #ProductiveProcrastination`;
+      document.getElementById('tweet-preview-text').textContent = text;
+    }
+
+    function postAccountabilityTweet() {
+      const text = encodeURIComponent(document.getElementById('tweet-preview-text').textContent);
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+      triggerConfettiBurst();
+    }
+
+    function copyTweetText() {
+      const text = document.getElementById('tweet-preview-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied accountability pledge to clipboard!');
+      });
+    }
+
+    /* HALL OF DELAY (HISTORY WALL & AUTO-COMPLETE) */
+    function initHistoryWall() {
+      let history = getHistory();
+      if (history.length === 0) {
+        history = [
+          {
+            task: "Update LinkedIn headline",
+            avoidedDays: 4,
+            status: "Auto-Completed",
+            reason: "Algorithm changed anyway; status quo preserved."
+          },
+          {
+            task: "Organize spice rack by alphabet",
+            avoidedDays: 7,
+            status: "Auto-Completed",
+            reason: "Paprika expired; universe solved problem."
+          }
+        ];
+        saveHistory(history);
+      }
+      renderHistoryItems(history);
+    }
+
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_HISTORY) || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveHistory(list) {
+      localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(list));
+    }
+
+    function saveToHistory(taskName, status) {
+      const list = getHistory();
+      list.unshift({
+        task: taskName,
+        avoidedDays: 1,
+        status: status || 'In Progress',
+        reason: 'Currently converting into accidental brilliance.'
+      });
+      saveHistory(list.slice(0, 20));
+      renderHistoryItems(getHistory());
+    }
+
+    function renderHistoryItems(list) {
+      const container = document.getElementById('history-grid-items');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-dim); text-align:center; padding:2rem;">Your Hall of Delay is currently empty. Go avoid something grand!</p>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        const isAuto = item.status === 'Auto-Completed';
+        div.innerHTML = `
+          <div class="history-left">
+            <h4>${escapeHtml(item.task)}</h4>
+            <p>Avoided for ${item.avoidedDays} day(s) • ${escapeHtml(item.reason || '')}</p>
+          </div>
+          <div>
+            <span class="badge-status ${isAuto ? 'autodone' : 'active'}">
+              ${isAuto ? '✨ Auto-Resolved' : '🔥 Active Delay'}
+            </span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(STORAGE_KEY_HISTORY);
+      renderHistoryItems([]);
+    }
+
+    /* STREAK SYSTEM */
+    function initStreak() {
+      const streak = parseInt(localStorage.getItem(STORAGE_KEY_STREAK) || '3', 10);
+      document.getElementById('streak-count').textContent = streak;
+    }
+
+    function incrementStreak() {
+      let streak = parseInt(localStorage.getItem(STORAGE_KEY_STREAK) || '3', 10);
+      streak++;
+      localStorage.setItem(STORAGE_KEY_STREAK, streak.toString());
+      document.getElementById('streak-count').textContent = streak;
+    }
+
+    /* CANVAS CONFETTI ENGINE (ZERO DEPENDENCY) */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function triggerConfettiBurst(mega = false) {
+      const count = mega ? 150 : 70;
+      const colors = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#fbbf24', '#f43f5e'];
+
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+          y: canvas.height * 0.45 + (Math.random() - 0.5) * 200,
+          vx: (Math.random() - 0.5) * 14,
+          vy: Math.random() * -12 - 4,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      if (!confettiAnimId) {
+        animateConfetti();
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.vx *= 0.98;
+        p.rotation += p.rotSpeed;
+        p.opacity -= 0.012;
+
+        if (p.opacity <= 0 || p.y > canvas.height) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.4);
+        ctx.restore();
+      }
+
+      if (confettiParticles.length > 0) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    /* MODAL & SETTINGS */
+    function setupModal() {
+      const modal = document.getElementById('settings-modal');
+      const openBtn = document.getElementById('btn-open-settings');
+      const input = document.getElementById('api-key-input');
+
+      openBtn.onclick = () => {
+        input.value = localStorage.getItem(STORAGE_KEY_API) || '';
+        modal.classList.add('active');
+      };
+
+      modal.onclick = (e) => {
+        if (e.target === modal) closeSettingsModal();
+      };
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.remove('active');
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('api-key-input').value.trim();
+      if (key) {
+        localStorage.setItem(STORAGE_KEY_API, key);
+        alert('Gemini API key saved securely in your browser LocalStorage!');
+      } else {
+        localStorage.removeItem(STORAGE_KEY_API);
+        alert('Switched to Intelligent Offline Fallback mode.');
+      }
+      closeSettingsModal();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
