@@ -19,7 +19,9 @@
 
 ## 🎬 Product Demo
 
-![Procrasti-WIN Interactive Demo](demo.gif)
+<p align="center">
+  <img src="https://github.com/madhu-sunkari2/procrasti-win/raw/main/demo.gif" alt="Procrasti-WIN Interactive Demo" width="100%" />
+</p>
 
 ---
 
